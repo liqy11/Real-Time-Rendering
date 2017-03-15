@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<!-- saved from url=(0071)http://web.cse.ohio-state.edu/~hwshen/5542/Site/WebGL_files/code05.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>QingyangLi-lab1 </title>
+
+<style>
+
+.container {
+    position: relative;
+    overflow: none;
+}
+.button {
+    background-color: #1995AD;
+    border: none;
+    color: white;
+    padding: 6px 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 11px;
+    margin: 1px 1px;
+    cursor: pointer;
+}
+#text {
+    background-color: transparent;  /* needed because webgl-tutoraisl.css sets canvas bg color to white */
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 10;
+}
+</style>
+<!--  ************** Fragment Shader ************* --> 
+<script id="shader-fs" type="x-shader/x-fragment">
+precision mediump float;
+varying vec4 vColor; 
+void main(void) {
+        gl_FragColor = vColor; 
+    }
+</script>
+
+<!--  ************** Vertex Shader ************* --> 
+<script id="shader-vs" type="x-shader/x-vertex">
+
+    attribute vec3 aVertexPosition;
+    attribute vec4 aVertexColor;
+    varying vec4 vColor;
+    void main(void) {
+
+      gl_Position = vec4(aVertexPosition, 1.0);
+       vColor = aVertexColor; 
+
+    }
+</script>
+
+
+<script type="text/javascript" src="./lab1-files/shaders_setup.js"></script>
+<script type="text/javascript" src="./lab1-files/lab1.js"></script>
+<script type="text/javascript" src="./lab1-files/lab1-csv.js"></script>
+
+
+</head>
+<body onload="webGLStart();">
+    <div class="container">
+    <canvas id="code05-canvas" style="border:none;" width="700" height="700"></canvas>
+    <canvas id= "text" width = "700" height = "700"></canvas>
+    </div>
+    
+    <h4>-Click on the left mouse button to see charts of different species</h4>
+    <button class = "button" onclick="draw_bars(0)">Setossa Averages</button>
+    <button class = "button"onclick="draw_bars(1)">Versicolor Averages</button>
+    <button class = "button" onclick="draw_bars(2)">Virginica Averages</button>
+     <button class = "button" onclick="draw_all()"> Draw all </button>
+      <h4> Background:  </h4>
+    <button class = "button"onclick="BG(1,0,0)"> Red</button>
+    <button class = "button"onclick="BG(0,1,0)"> Green</button>
+    <button class = "button"onclick="BG(0,0,1)"> Blue</button>
+    <button class = "button"onclick="BG(0.5,0.5,0.5)"> Grey</button>
+    <button class = "button"onclick="BG(0,0,0)"> Black</button>
+    <button class = "button"onclick="BG(1,1,1)"> White</button>
+   <!--  <h4>
+      - Click on the left mouse button and move the coursor to rotate
+    </h4> -->
+
+    <!-- <button onclick="redraw()"> Reset Postions </button> -->
+    <!-- <button onclick="csv_draw_bars()"> Draw Bars </button> -->
+   
+ <!-- courtesy:
+ http://mounirmesselmeni.github.io/2012/11/20/reading-csv-file-with-javascript-and-html5-file-api/  -->
+ <div>
+    <form class="form-horizontal well">
+      <legend>
+        <h3>
+          <div id="title">HTML5 File API</div>
+        </h3>
+      </legend>
+      <fieldset>
+          <label for="csvFileInput"> <strong>CSV File:</strong>
+          </label>
+          <input type="file" id="csvFileInput" onchange="handleFiles(this.files)" accept=".csv">
+        </fieldset></form></div>
+      
+    
+    <div id="output">
+    </div>
+  
+
+
+<br>
+  <br>
+  <footer>
+    <center>
+      <p></p>
+    </center>
+  </footer>
+
+  <!-- Le javascript
+    ================================================== -->
+  <!-- Placed at the end of the document so the pages load faster -->
+  <script type="text/javascript" src="./lab1-files/read-csv.js"></script>
+
+
+
+
+
+
+    <br>
+
+
+
+
+
+
+</body></html>

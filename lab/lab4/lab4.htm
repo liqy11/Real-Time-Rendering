@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<!-- saved from url=(0071)http://web.cse.ohio-state.edu/~hwshen/5542/Site/WebGL_files/code07.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Qingyang Li lab4</title>
+
+
+<script type="text/javascript" src="./lab4_files/glMatrix-0.9.5.min.js"></script>
+
+<!--  ************** Fragment Shader ************* --> 
+<script id="shader-fs" type="x-shader/x-fragment">
+precision mediump float;
+
+   uniform mat4 uMMatrix; 
+   uniform mat4 uVMatrix;
+   uniform mat4 uPMatrix;
+   uniform mat4 uNMatrix; 
+
+   uniform vec4 light_pos; 
+   uniform vec4 ambient_coef;
+   uniform vec4 diffuse_coef;
+   uniform vec4 specular_coef;
+   uniform float mat_shininess; 
+
+   uniform vec4 light_ambient; 
+   uniform vec4 light_diffuse; 
+   uniform vec4 light_specular;
+
+   varying vec4 eye_pos; 
+   varying vec3 v_normal;
+   varying vec4 vColor; 
+
+
+
+
+void main(void) {
+        gl_FragColor = vColor; 
+    }
+</script>
+
+<!--  ************** Vertex Shader ************* --> 
+<script id="shader-vs" type="x-shader/x-vertex">
+
+  precision mediump float;
+    attribute vec3 aVertexPosition;
+    attribute vec3 aVertexNormal;
+    attribute vec4 aVertexColor;
+
+   uniform mat4 uMMatrix; 
+   uniform mat4 uVMatrix;
+   uniform mat4 uPMatrix;
+   uniform mat4 uNMatrix; 
+
+   uniform vec4 light_pos; 
+   uniform vec4 ambient_coef;
+   uniform vec4 diffuse_coef;
+   uniform vec4 specular_coef;
+   uniform float mat_shininess; 
+
+   uniform vec4 light_ambient; 
+   uniform vec4 light_diffuse; 
+   uniform vec4 light_specular;
+
+   varying vec4 eye_pos;  //vertex position in eye space 
+   varying vec3 v_normal;  // vertex normal
+   varying vec4 vColor; 
+
+
+    void main(void) {
+
+       // transform light pos from local to eye space
+       // vec4 light_pos_in_eye = uVMatrix * uMMatrix * light_pos;
+  vec4 light_pos_in_eye = light_pos;   
+
+        // transform normal from local to eye space: normal matrix is the inverse transpose of the modelview matrix 
+  v_normal =normalize(vec3(uNMatrix*vec4(aVertexNormal,1.0)));
+
+        // transform the vertex position to eye space 
+        eye_pos = uVMatrix*uMMatrix*vec4(aVertexPosition, 1.0);
+
+        // light vector L = l-p 
+        vec3 light_vector = normalize(vec3(light_pos_in_eye - eye_pos)); 
+
+        // eye vector V = e-p, where e is (0,0,0) 
+        vec3 eye_vector = -vec3(eye_pos); 
+        
+        // halfway vector (L+V) 
+        vec3 halfv = normalize(light_vector+eye_vector); 
+        
+        vec4 ambient = ambient_coef * light_ambient; 
+        float ndotl = max(dot(v_normal, light_vector), 0.0); 
+
+        vec4 diffuse = diffuse_coef * light_diffuse* ndotl; 
+        float ndoth = max(dot(v_normal, halfv), 0.0);
+        vec4 specular;  
+        if (ndotl>0.0) 
+        specular = specular_coef* light_specular*pow(ndoth, mat_shininess); 
+        else
+        specular = vec4(0,0,0,1);  
+        vColor = ambient+diffuse+specular;
+
+        gl_Position = uPMatrix*uVMatrix*uMMatrix*vec4(aVertexPosition, 1.0);
+
+//      vColor = aVertexColor;
+//      vColor = vec4(aVertexNormal, 1.0);
+//      vColor = vec4(v_normal, 1.0);
+
+    }
+</script>
+
+
+<script type="text/javascript" src="./lab4_files/shaders_setup.js"></script>
+<script type="text/javascript" src="./lab4_files/lab4.js"></script>
+
+
+</head>
+
+
+<body onload="webGLStart();">
+    <canvas id="code03-canvas" style="border:none;" width="700" height="700"></canvas>
+
+ <!--    <h4> Geometry:  </h4>
+    <button onclick="geometry(0)"> POINTS</button>
+    <button onclick="geometry(1)"> LINEs</button>
+    <button onclick="geometry(2)"> FACES</button> -->
+
+    <!-- <h4> Background:  </h4> -->
+ <!--    <button onclick="BG(1,0,0)"> Red</button>
+    <button onclick="BG(0,1,0)"> Green</button>
+    <button onclick="BG(0,0,1)"> Blue</button>
+    <button onclick="BG(0.5,0.5,0.5)"> Grey</button>
+    <button onclick="BG(0,0,0)"> Black</button>
+    <button onclick="BG(1,1,1)"> White</button> -->
+    <h4> Camera: </h4>
+    <button onclick = "Camera(1)"> Camera Up</button>
+    <button onclick = "Camera(2)"> Camera Down</button>
+    <button onclick = "Camera(3)">Camera Left</button>
+    <button onclick = "Camera(4)"> Camera Right</button>
+    <h4> COI: </h4>
+     <button onclick = "COI(1)"> COI Up</button>
+    <button onclick = "COI(2)"> COI Down</button>
+    <button onclick = "COI(3)">COI Left</button>
+    <button onclick = "COI(4)"> COI Right</button>
+     <button onclick = "COI(5)"> COI Roll</button>
+    
+
+
+
+
+    <div>
+    <h4>
+    Click on the left mouse button and move the coursor to rotate
+
+    
+    </h4>
+      <h4>
+  
+    
+     Click on the right mouse button and move the coursor to scale
+    </h4>
+  <!--   <button onclick="redraw()"> Go Back! </button> -->
+    </div>
+
+ <div>
+        <h3>
+          <div id="title"> lab3</div>
+        </h3>
+        <h5>
+          
+	  </h5> 
+  </div>
+
+  
+    
+
+
+
+
+
+</body></html>
